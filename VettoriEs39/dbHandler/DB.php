@@ -1,0 +1,43 @@
+<?php 
+    class DB {
+        private function createConn(){
+            $host = "localhost";
+            $user = "root";
+            $pass = "";
+            $db = "museo";
+            return mysqli_connect($host, $user, $pass, $db);
+        }
+
+        public function fetchArtists(){
+            $conn = $this->createConn();
+            $query = "SELECT * FROM artista";
+            $res = mysqli_query($conn, $query);
+            mysqli_close($conn);
+            return $res->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function fetchAllOpereWithArtist(){
+            $conn = $this->createConn();
+            $query = "SELECT * FROM opera
+            JOIN artista AS a ON a.id_artista = opera.id_artista";
+            $res = mysqli_query($conn, $query);
+            mysqli_close($conn);
+            return $res->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function fetchOpereArtist($id){
+            $conn = $this->createConn();
+            $query = "SELECT * FROM opera WHERE id_artista = '$id'";
+            $res = mysqli_query($conn, $query);
+            mysqli_close($conn);
+            return $res->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function deleteOperaByID($id){
+            $conn = $this->createConn();
+            $query = "DELETE FROM opera WHERE id_opera = '$id'";
+            mysqli_query($conn, $query);
+            mysqli_close($conn);
+        }
+    }
+?>
