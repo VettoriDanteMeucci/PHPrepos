@@ -1,0 +1,16 @@
+table{
+    text-align: center;
+    border: 1px solid black;
+}
+
+.container{
+    display: flex;
+    width: 100%;
+    gap: 2vw;
+}
+
+.container > * {
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 0.5vw;
+}
