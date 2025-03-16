@@ -11,29 +11,29 @@
 
 <body>
 
-    <?php 
-        include_once "./dbHandler/DB.php";
-        $db = new DB();
+    <?php
+    include_once "./dbHandler/DB.php";
+    $db = new DB();
     ?>
 
-<div class="row">
-    <!-- search -->
-    <div class="col-5 mx-auto" method="post">
-        <select class="form-control w-50 mx-auto" name="artist" id="search">
-            <?php 
+    <div class="row">
+        <!-- search -->
+        <div class="col-5 mx-auto" method="post">
+            <select class="form-control w-50 mx-auto" name="artist" id="search">
+                <?php
                 $artists = $db->fetchArtists();
-                foreach($artists as $artist){
+                foreach ($artists as $artist) {
                     ?>
-                        <option <?php echo "value='". $artist['id_artista'] ."'";?>>
-                            <?php 
-                                echo $artist['nome_artista'] . " " . $artist['cognome_artista'];
-                            ?>
-                        </option>
+                    <option <?php echo "value='" . $artist['id_artista'] . "'"; ?>>
+                        <?php
+                        echo $artist['nome_artista'] . " " . $artist['cognome_artista'];
+                        ?>
+                    </option>
                     <?php
                 }
-            ?>
+                ?>
             </select>
-            </div>
+        </div>
         <!-- Results -->
         <div class="col-6 mx-auto">
             <table class="table text-center" id="filter">
@@ -42,15 +42,15 @@
                         Opere
                     </th>
                 </tr>
-                <?php 
-                foreach($artists as $artist){
+                <?php
+                foreach ($artists as $artist) {
                     $opere = $db->fetchOpereArtist($artist["id_artista"]);
-                    foreach($opere as $opera){
+                    foreach ($opere as $opera) {
                         ?>
-                            <tr <?php echo "data-artist='$opera[id_artista]'"; ?>>
-                                <td><?php echo $opera["nome_opera"]; ?></td>
-                                <td><?php echo $opera["tipo_opera"]; ?></td>
-                            </tr>
+                        <tr <?php echo "data-artist='$opera[id_artista]'"; ?>>
+                            <td><?php echo $opera["nome_opera"]; ?></td>
+                            <td><?php echo $opera["tipo_opera"]; ?></td>
+                        </tr>
                         <?php
                     }
                 }
@@ -58,23 +58,58 @@
             </table>
         </div>
 
-        <div class="col-11 border rounded mx-auto p-3">
+        <div class="col-2 border rounded mx-auto p-3">
             <form action="./actions/deleteOpera.php" method="POST">
                 <label for="">Opera da eliminare</label>
                 <select required class="form-control" name="delete">
-                    <?php 
-                        $related = $db->fetchAllOpereWithArtist();
-                        foreach($related as $rel){
-                            echo "<option value='"
-                             . $rel['id_opera'] .
+                    <?php
+                    $related = $db->fetchAllOpereWithArtist();
+                    foreach ($related as $rel) {
+                        echo "<option value='"
+                            . $rel['id_opera'] .
                             "'>$rel[nome_opera] ($rel[nome_artista] $rel[cognome_artista])</option>";
-                        }
+                    }
                     ?>
                 </select>
                 <button class="btn btn-danger mt-3">
                     Elimina
                 </button>
             </form>
+        </div>
+        <?php
+        $data = $db->fetchOpereBetween(1970, 1990);
+        ?>
+        <div class="col-5 rounded border">
+            <table class="table">
+                <tr>
+                    <th><?php echo "Sculture (" . $data["countSculture"] . ")" ?></th>
+                </tr>
+                <?php
+                foreach ($data["sculture"] as $scultura) {
+                    ?>
+                    <tr>
+                        <td><?php echo $scultura["nome_opera"]; ?></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+            </table>
+        </div>
+        <div class="col-5 rounded border">
+        <table class="table">
+                <tr>
+                    <th><?php echo "Pitture (" . $data["countPitture"] . ")" ?></th>
+                </tr>
+                <?php
+                foreach ($data["pitture"] as $pittura) {
+                    ?>
+                    <tr>
+                        <td><?php echo $pittura["nome_opera"]; ?></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+            </table>
         </div>
     </div>
 

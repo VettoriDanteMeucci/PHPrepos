@@ -39,5 +39,42 @@
             mysqli_query($conn, $query);
             mysqli_close($conn);
         }
+
+        public function fetchOpereBetween($yearStart, $yearEnd){
+            if($yearEnd < $yearStart){return null;}
+            $pitture = $this->fetchOperePittura($yearStart, $yearEnd);
+            $sculture = $this->fetchOpereScultura($yearStart, $yearEnd);
+            if($pitture == null || $sculture == null){return null;}
+            $ans = ["sculture" => $sculture, "pitture" => $pitture];
+            $ans["countSculture"] = count($sculture);
+            $ans["countPitture"] = count($pitture);
+            return $ans;
+        }
+
+        private function fetchOpereScultura($yearStart, $yearEnd){
+            if($yearEnd < $yearStart){return null;}
+            $conn = $this->createConn();
+            $query = "
+            SELECT * FROM opera 
+            JOIN artista ON artista.id_artista = opera.id_artista 
+            WHERE anno_nascita_artista BETWEEN $yearStart AND $yearEnd 
+            AND tipo_opera = 'scultura'";
+            $res = mysqli_query($conn, $query);
+            mysqli_close($conn);
+            return $res->fetch_all(MYSQLI_ASSOC);
+        }
+
+        private function fetchOperePittura($yearStart, $yearEnd){
+            if($yearEnd < $yearStart){return null;}
+            $conn = $this->createConn();
+            $query = "
+            SELECT * FROM opera 
+            JOIN artista ON artista.id_artista = opera.id_artista 
+            WHERE anno_nascita_artista BETWEEN $yearStart AND $yearEnd 
+            AND tipo_opera = 'pittura'";
+            $res = mysqli_query($conn, $query);
+            mysqli_close($conn);
+            return $res->fetch_all(MYSQLI_ASSOC);
+        }
     }
 ?>
