@@ -19,7 +19,7 @@
       if($_SESSION["operation"] == true){
         echo 
         "<div class='col-12 alert alert-success mt-3 px-5' role='alert'>
-          Utente aggiunto con successo
+          Operazione effettuata con successo con successo
         </div>";
       }else{
         echo
@@ -28,6 +28,12 @@
         </div>";
       }
       unset($_SESSION["operation"]);
+    }
+  ?>
+  <?php 
+    if(isset($_SESSION["user"])){
+      $tmp = $_SESSION["user"]["username"];
+      echo "<h1 class='fs-1'>Ciao $tmp</h1>";
     }
   ?>
   <form
@@ -66,6 +72,51 @@
   <button type="reset" class="btn btn-danger">Reset</button>
 </form>
 
+<!-- Column -->
+  <div class="col-5 mx-auto mt-5 border rounded p-3">
+      <div class="row">
+            <div class="fs-2 text-center mb-2">
+              User Actions
+
+            </div>
+            <div class="row w-50 mx-auto gap-3">
+            <?php 
+                if(isset($_SESSION["user"])){
+            ?>
+            
+              <a href="./pages/modify.php" class="btn btn-outline-warning mx-auto">Modifica</a>
+              <a href="./actions/logout.php" class="btn btn-outline-danger mx-auto">Logout</a>
+              <form class="p-0" method="POST" action="./actions/deleteUser.php">
+                <input type="hidden" name="userID" <?php 
+                  $id = $_SESSION["user"]["id"];
+                  echo "value='$id'"?>
+                >
+                <button class="btn btn-outline-danger mx-auto w-100">Elimina</button>
+              </form>
+                <?php }else{ ?>
+              <a href="./pages/login.php" class="btn btn-outline-primary mx-auto">Login</a>
+                  <?php } ?>
+            </div>
+          </div>
+
+  </div>
+  <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 border rounded p-3 mb-5">
+              <table class="table text-center">
+                  <tr>
+                    <th class="fs-4" colspan="2">Users</th>
+                  </tr>
+                  <?php 
+                    foreach ($db->getUsers() as $user){
+                      ?>
+                        <tr>
+                          <td><?php echo $user["username"];?></td>
+                          <td><?php echo $db->getTypeByID($user['id_tipo'])['nome']; ?></td>
+                        </tr>
+                      <?php
+                    }
+                  ?>
+              </table>
+        </div>
   </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
